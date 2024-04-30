@@ -1,0 +1,62 @@
+/* Variables del CSS */
+@import url('https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;600;700&display=swap');
+
+@import "reset.css";
+
+:root {
+    --background-color: #23272E;
+    --text-color: #FFFFFF;
+    --navbar-color: #15181C;
+    --border-color: #41b883;
+    --remove-btn-color: #e06c75;
+}
+
+
+html {
+    color: var(--text-color);
+    font-family: 'Fira Sans', sans-serif;
+}
+
+main {
+
+
+    width: 1200px;
+    /* Se incluye el auto para centrar el contenido automaticamente */
+    margin: 30px auto 0px auto;
+
+}
+
+header {
+    display: flex;
+
+    align-items: center;
+    background: var(--navbar-color);
+    padding: 30px;
+    margin-bottom: 30px;
+
+}
+
+#form {
+    width: 100%;
+
+
+}
+
+#container{
+    display: flex;
+
+    margin: auto 100px auto 100px;
+
+    /* centrar el contenido en el eje x */
+    justify-content: center;
+    flex-direction: row;
+    min-height: 70vh;
+    gap: 20px;
+
+}
+
+#brand{
+    font-size: 1.5rem;
+    margin-left: 20px;
+    color: var(--text-color);
+}
