@@ -175,7 +175,12 @@ function saveFormStructure() {
 
 function renderForm() {
     
-    
+    //Cambia el titulo del header
+    let brand = document.getElementById('brand');
+    brand.innerHTML = form.name;
+    //El boton de finalizar se cambia por el de enviar
+    finish_btn.innerHTML = '<button type="button" class="btn btn-success">Enviar</button>';
+    finish_btn.removeEventListener('click', saveFormStructure); //Elimina el evento de guardar
     //Marcha el main
     main.innerHTML = '';
     //Renderiza el nombre
