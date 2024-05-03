@@ -17,10 +17,6 @@ var error;
 
 var questionCounter = 0;
 
-
-
-
-
 /**
  * Genera una nueva pregunta en el formulario
  */
@@ -61,22 +57,9 @@ function addQuestion() {
 }
 
 
-
-function appendQuestionField(){
-    let div = document.createElement('div');
-    div.className = 'form-group';
-    let label = document.createElement('label');
-    label.innerHTML = 'Nombre de la pregunta';
-    let input = document.createElement('input');
-    input.type = 'text';
-    input.className = 'form-control';
-    div.appendChild(label);
-    div.appendChild(input);
-    document.getElementById('questions').appendChild(div);
-    
-
-}
-
+/**
+ * Resetea los listeners de los select
+ */
 function refreshListeners(){
     form_select = document.getElementsByClassName('form-select');
     for (var i = 0; i < form_select.length; i++) {
@@ -84,6 +67,11 @@ function refreshListeners(){
     }
 }
 
+
+/**
+ * Agrega las opciones de una pregunta de opción múltiple
+ * @param {HTMLDivElement} parentDiv 
+ */
 function addMultipleChoiceOptions(parentDiv) {
     let container = document.createElement('div');
     container.className = 'options-container';
@@ -114,6 +102,10 @@ function addMultipleChoiceOptions(parentDiv) {
 
 }
 
+
+/**
+ * Maneja el cambio de un select
+ */
 function handleSelectChange() {
     const selectedType = this.value;
     const parentDiv = this.closest('.card-body');
@@ -125,6 +117,11 @@ function handleSelectChange() {
     }
 }
 
+
+/**
+ * Guarda la estructura del formulario
+ * @returns JSON con la estructura del formulario
+ */
 function saveFormStructure() {
     
     if (!formName || !formDescription || !formName.value.trim() || !formDescription.value.trim()) {
@@ -180,6 +177,10 @@ function saveFormStructure() {
         
 }
 
+
+/**
+ * Renderiza el formulario final
+ */
 function renderForm() {
     
     //Cambia el titulo del header
@@ -266,7 +267,9 @@ function renderForm() {
     
 
 
-
+/**
+ * Espera a que el DOM esté listo
+ */
 function domReady(){
     
     finish_btn = document.getElementById('finish_btn');
@@ -279,15 +282,9 @@ function domReady(){
     add_form_btn.addEventListener('click', addQuestion);
 
     finish_btn.addEventListener('click', saveFormStructure);
-
-
-
     refreshListeners();
-
-
-
 }
 
 
-
+//Main
 document.addEventListener('DOMContentLoaded', domReady);
