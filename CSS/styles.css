@@ -5,7 +5,7 @@
 
 :root {
     /* Set of retrowave colors */
-    --navbar-color: #B2599B; /* Rosado neón para la barra de navegación */
+    --navbar-color: #373a38; /* Rosado neón para la barra de navegación */
     --text-color: #f0f0f0; /* Blanco puro para el texto */
     --background-color: #1a1a1a; /* Gris oscuro casi negro para el fondo */
     --button-color: #ff6b6b; /* Rosado neón para los botones */
@@ -41,6 +41,8 @@ header {
     display: flex;
     flex-direction: row;
     background: var(--navbar-color);
+    /* Imagen de fondo */
+    background-image: url("../assets/pattern_header.jpg");
     padding: 20px;
     width: 100%;
     /* Alinear a los extremos */

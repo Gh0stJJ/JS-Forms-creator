@@ -13,6 +13,7 @@ var form;
 var form_select;
 var add_form_btn;
 var main;
+var error;
 
 var questionCounter = 0;
 
@@ -24,6 +25,9 @@ var questionCounter = 0;
  * Genera una nueva pregunta en el formulario
  */
 function addQuestion() {
+    //Reset error
+    error.className = '';
+    error.innerHTML = '';
    questionCounter++
     //Html de la pregunta
     let questionHtml = `
@@ -124,7 +128,8 @@ function handleSelectChange() {
 function saveFormStructure() {
     
     if (!formName || !formDescription || !formName.value.trim() || !formDescription.value.trim()) {
-        alert('Por favor, complete el nombre y la descripción del formulario.');
+        error.className = 'alert alert-danger';
+        error.innerHTML = 'Por favor, complete todos los campos.';
         return;
     }
 
@@ -139,7 +144,8 @@ function saveFormStructure() {
         let questionTitleInput = questionCard.querySelector('input.form-control');
         let questionTypeSelect = questionCard.querySelector('select.form-select');
         if (!questionTitleInput || !questionTypeSelect || !questionTitleInput.value.trim() || questionTypeSelect.value === 'Tipo de pregunta...') {
-            alert(`Por favor, complete todos los campos de la pregunta ${index + 1}.`);
+            error.className = 'alert alert-danger';
+            error.innerHTML = `Por favor, complete todos los campos de la pregunta ${index + 1}.`;
             form = null;
             return;
         }
@@ -153,7 +159,8 @@ function saveFormStructure() {
                                 .map(input => input ? input.value.trim() : '')
                                 .filter(value => value);
             if (options.length === 0) {
-                alert(`Por favor, añada al menos una opción a la pregunta ${index + 1}.`);
+                error.className = 'alert alert-danger';
+                error.innerHTML = `Por favor, agregue al menos una opción para la pregunta ${index + 1}.`;
                 return;
             }
             question.options = options;
@@ -265,7 +272,7 @@ function domReady(){
     finish_btn = document.getElementById('finish_btn');
     formName = document.getElementById('formName');
     formDescription = document.getElementById('formDescription');
-    
+    error = document.getElementById('error');
     add_form_btn = document.getElementById('add_form_btn');
     main = document.getElementById('main');
 
