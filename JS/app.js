@@ -9,8 +9,7 @@
 var finish_btn;
 var formName;
 var formDescription;
-var formStructure = [];
-var formQuestions = [];
+var form;
 var form_select;
 var add_form_btn;
 var main;
@@ -50,7 +49,7 @@ function addQuestion() {
                     </div>
                 </div>
     `
-    //agregar al elemento main antes del boton de agregar pregunta
+ 
     let newQuestion = document.createElement('div');
     newQuestion.innerHTML = questionHtml;
     main.insertBefore(newQuestion, add_form_btn);
@@ -122,11 +121,138 @@ function handleSelectChange() {
     }
 }
 
+function saveFormStructure() {
+    
+    if (!formName || !formDescription || !formName.value.trim() || !formDescription.value.trim()) {
+        alert('Por favor, complete el nombre y la descripción del formulario.');
+        return;
+    }
+
+    form = {
+        name: formName.value.trim(),
+        description: formDescription.value.trim(),
+        questions: []
+    };
+
+    let questionCards = document.querySelectorAll('.card:not(#creator)');
+    questionCards.forEach((questionCard, index) => {
+        let questionTitleInput = questionCard.querySelector('input.form-control');
+        let questionTypeSelect = questionCard.querySelector('select.form-select');
+        if (!questionTitleInput || !questionTypeSelect || !questionTitleInput.value.trim() || questionTypeSelect.value === 'Tipo de pregunta...') {
+            alert(`Por favor, complete todos los campos de la pregunta ${index + 1}.`);
+            form = null;
+            return;
+        }
+        let question = {
+            title: questionTitleInput.value.trim(),
+            type: questionTypeSelect.value
+        };
+
+        if (question.type === '3') { // Opción múltiple
+            let options = Array.from(questionCard.querySelectorAll('.options-container input'))
+                                .map(input => input ? input.value.trim() : '')
+                                .filter(value => value);
+            if (options.length === 0) {
+                alert(`Por favor, añada al menos una opción a la pregunta ${index + 1}.`);
+                return;
+            }
+            question.options = options;
+        }
+
+        form.questions.push(question);
+        
+        
+        
+    });
+
+    console.log(form);
+    if (form){
+        alert('Formulario guardado correctamente.');
+        renderForm();
+    }
+        
+}
+
 function renderForm() {
-    //Limpiar el contenedor de preguntas
-    document.getElementById('questions').innerHTML = '';
+    
+    
+    //Marcha el main
+    main.innerHTML = '';
+    //Renderiza el nombre
+    let formNameElement = document.createElement('div');
+    formNameElement.id = 'title';
+    formNameElement.innerHTML = `<strong>${form.name}</strong>`;
+
+    //Renderiza la descripcion
+    let formDescriptionElement = document.createElement('div');
+    formDescriptionElement.id = 'description';
+    formDescriptionElement.innerHTML = form.description;
+
+    //Renderiza las preguntas
+    let questionsElement = document.createElement('div');
+    questionsElement.id = 'questions';
+    form.questions.forEach((question, index) => {
+        let questionElement = document.createElement('div');
+        questionElement.className = 'card';
+        let questionTitleElement = document.createElement('div');
+        questionTitleElement.className = 'card-header';
+        questionTitleElement.innerHTML = `<strong>Pregunta ${index + 1}</strong>`;
+        questionElement.appendChild(questionTitleElement);
+        let questionBodyElement = document.createElement('div');
+        questionBodyElement.className = 'card-body';
+        questionBodyElement.innerHTML = `
+            <h3>${question.title}</h3>
+        `;
+
+        if(question.type === '1'){
+            questionBodyElement.innerHTML += `<input type="text" class="form-control">`;
+
+        }else if(question.type === '2'){
+            //Use checkboxes for true/false questions
+            questionBodyElement.innerHTML += `
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                    <label class="form-check-label" for="flexRadioDefault1">
+                    Verdadero
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
+                    <label class="form-check-label" for="flexRadioDefault2">
+                    Falso
+                    </label>
+                </div>
+            `;
+
+        }else if(question.type === '3'){
+            question.options.forEach(option => {
+                questionBodyElement.innerHTML += `
+                <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                <label class="form-check-label" for="flexCheckDefault">
+                  ${option}
+                </label>
+              </div> `
+            });
+
+            
+        }
+        questionElement.appendChild(questionBodyElement);
+        questionsElement.appendChild(questionElement);
+
+
+
+    });
+
+    main.appendChild(formNameElement);
+    main.appendChild(formDescriptionElement);
+    main.appendChild(questionsElement);
+
     
 }
+    
+    
+
 
 
 function domReady(){
@@ -140,16 +266,7 @@ function domReady(){
 
     add_form_btn.addEventListener('click', addQuestion);
 
-    finish_btn.addEventListener('click', function(){
-        //Guardar el nombre y la descripcion del formulario
-        let form = {
-            name: formName.value,
-            description: formDescription.value,
-            questions: formQuestions
-        }
-        console.log(form);
-    }
-    );
+    finish_btn.addEventListener('click', saveFormStructure);
 
 
 

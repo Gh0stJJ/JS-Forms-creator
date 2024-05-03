@@ -36,6 +36,7 @@ main {
 }
 
 
+
 header {
     display: flex;
     flex-direction: row;
@@ -134,4 +135,12 @@ header {
     cursor: pointer;
    
     transition: background-color 0.3s;
+}
+
+#questions{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    
+    width: 100%;
 }
