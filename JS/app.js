@@ -13,73 +13,51 @@ var formStructure = [];
 var formQuestions = [];
 var form_select;
 var add_form_btn;
+var main;
 
-var numQuestions = 0;
+var questionCounter = 0;
 
 
 
-function addToStructure(e){
 
-   let question = {
-         name: creator_fieldName.value,
-         type: creator_fieldType.value
-    }
+
+/**
+ * Genera una nueva pregunta en el formulario
+ */
+function addQuestion() {
+   questionCounter++
+    //Html de la pregunta
+    let questionHtml = `
+        <!-- Question component -->
+                <div class="card" id="creator${questionCounter}">
+                    <div class="card-header">
+                        <strong>Configuración de pregunta ${questionCounter}</strong>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="fieldName">Nombre de la pregunta</label>
+                            <input type="text" class="form-control" id="question_title${questionCounter}" placeholder="Ingrese un nombre para la pregunta">
+                        </div>
+                        <div class="form-group">
+                            <label for="fieldType">Tipo de pregunta</label>
+                            <select class="form-select" id=" select${questionCounter}">
+                                <option selected>Tipo de pregunta...</option>
+                                <option value="1">Texto</option>
+                                <option value="2">Verdadero/falso</option>
+                                <option value="3">Opción multiple</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+    `
+    //agregar al elemento main antes del boton de agregar pregunta
+    let newQuestion = document.createElement('div');
+    newQuestion.innerHTML = questionHtml;
+    main.insertBefore(newQuestion, add_form_btn);
+    refreshListeners();
 }
 
-function renderForm(){
-    
-}
 
-function addQuestion(){
-    numQuestions++;
-    let div = document.createElement('div');
-    div.className = 'card';
-    let card_header = document.createElement('div');
-    card_header.className = 'card-header';
-    let strong = document.createElement('strong');
-    strong.innerHTML = 'Configuracion de la pregunta';
-    card_header.appendChild(strong);
-    div.appendChild(card_header);
-    let card_body = document.createElement('div');
-    card_body.className = 'card-body';
-    let div_group = document.createElement('div');
-    div_group.className = 'form-group';
-    let label = document.createElement('label');
-    label.innerHTML = 'Nombre de la pregunta';
-    let input = document.createElement('input');
-    input.type = 'text';
-    input.className = 'form-control';
-    input.id = 'question'+numQuestions;
-    div_group.appendChild(label);
-    div_group.appendChild(input);
-    card_body.appendChild(div_group);
-    let div_group2 = document.createElement('div');
-    div_group2.className = 'form-group';
-    let label2 = document.createElement('label');
-    label2.innerHTML = 'Tipo de pregunta';
-    let select = document.createElement('select');
-    select.className = 'form-control form-select';
-    let option1 = document.createElement('option');
-    option1.value = 1;
-    option1.innerHTML = 'Texto';
-    let option2 = document.createElement('option');
-    option2.value = 2;
-    option2.innerHTML = 'Verdadero/falso';
-    let option3 = document.createElement('option');
-    option3.value = 3;
-    option3.innerHTML = 'Opcion multiple';
-    select.appendChild(option1);
-    select.appendChild(option2);
-    select.appendChild(option3);
-    div_group2.appendChild(label2);
-    div_group2.appendChild(select);
-    card_body.appendChild(div_group2);
-    div.appendChild(card_body);
-    document.getElementById('questions').appendChild(div);
-
-    //Poner listener al select
-
-}
 
 function appendQuestionField(){
     let div = document.createElement('div');
@@ -96,65 +74,88 @@ function appendQuestionField(){
 
 }
 
+function refreshListeners(){
+    form_select = document.getElementsByClassName('form-select');
+    for (var i = 0; i < form_select.length; i++) {
+        form_select[i].addEventListener('change', handleSelectChange);
+    }
+}
 
+function addMultipleChoiceOptions(parentDiv) {
+    let container = document.createElement('div');
+    container.className = 'options-container';
+
+    let addButton = document.createElement('button');
+    addButton.innerHTML = 'Agregar opción';
+    addButton.className = 'btn btn-success';
+    addButton.type = 'button';
+    addButton.addEventListener('click', function () {
+        let optionDiv = document.createElement('div');
+        optionDiv.className = 'form-group';
+        let label = document.createElement('label');
+        let numOptions = container.children.length;
+        label.innerHTML = 'Nombre de la opción ' + numOptions;
+        let input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'form-control';
+        optionDiv.appendChild(label);
+        optionDiv.appendChild(input);
+        container.appendChild(optionDiv);
+    });
+
+    parentDiv.appendChild(container);
+    container.appendChild(addButton);
+
+    
+
+
+}
+
+function handleSelectChange() {
+    const selectedType = this.value;
+    const parentDiv = this.closest('.card-body');
+    if (selectedType === '3') { // Opción múltiple
+        console.log('Opción múltiple');
+        addMultipleChoiceOptions(parentDiv);
+        //Block combobox
+        this.disabled = true;
+    }
+}
+
+function renderForm() {
+    //Limpiar el contenedor de preguntas
+    document.getElementById('questions').innerHTML = '';
+    
+}
 
 
 function domReady(){
+    
     finish_btn = document.getElementById('finish_btn');
     formName = document.getElementById('formName');
     formDescription = document.getElementById('formDescription');
     
-    form_select = document.getElementsByClassName('form-select');
     add_form_btn = document.getElementById('add_form_btn');
-    
-    finish_btn.addEventListener('click', renderForm);
+    main = document.getElementById('main');
+
     add_form_btn.addEventListener('click', addQuestion);
-    
-    for(var i = 0; i < form_select.length; i++){  
-        form_select[i].addEventListener('change', function(){
-            if (this.value == 3){
-                //opcion multiple
-                //Contenedor de opciones
-                let contain_div = document.createElement('div');
-                contain_div.className = 'form-container';
-                let div = document.createElement('div');
-                div.className = 'form-group';
-                let label = document.createElement('label');
-                label.innerHTML = 'Nombre de la opcion';
-                let input = document.createElement('input');
-                input.type = 'text';
-                input.className = 'form-control';
-                div.appendChild(label);
-                div.appendChild(input);
-                
-                this.parentNode.appendChild(contain_div);
-                contain_div.appendChild(div);
-                
-                //Remove this
-                this.parentNode.removeChild(this);
-                //Boton para agregar otra opcion
-                let add_option = document.createElement('button');
-                add_option.innerHTML = 'Agregar otra opcion';
-                add_option.className = 'btn btn-success';
-                add_option.addEventListener('click', function(){
-                    let div = document.createElement('div');
-                    div.className = 'form-group';
-                    let label = document.createElement('label');
-                    let numOptions = contain_div.children.length;
-                    label.innerHTML = 'Nombre de la opcion '+numOptions;
-                    let input = document.createElement('input');
-                    input.type = 'text';
-                    input.className = 'form-control';
-                    div.appendChild(label);
-                    div.appendChild(input);
-                    this.parentNode.insertBefore(div, this);
-                });
-                
-                contain_div.appendChild(add_option);
-                
-            }
-        });
+
+    finish_btn.addEventListener('click', function(){
+        //Guardar el nombre y la descripcion del formulario
+        let form = {
+            name: formName.value,
+            description: formDescription.value,
+            questions: formQuestions
+        }
+        console.log(form);
     }
+    );
+
+
+
+    refreshListeners();
+
+
 
 }
 

@@ -118,10 +118,20 @@ header {
     transition: background-color 0.3s;
 }
 
-.form-container{
+.options-container{
     display: flex;
     flex-direction: column;
     gap: 10px;
-    width: 60%;
+    width: 50%;
     margin: 15px auto 15px auto;
+    justify-content: center;
+    align-items: center;
+}
+
+.options-container button{
+    font-size: large;
+    font-weight: bolder;
+    cursor: pointer;
+   
+    transition: background-color 0.3s;
 }
